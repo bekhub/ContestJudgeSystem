@@ -1,0 +1,51 @@
+﻿<form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+  <div class="form-group">
+    <label class="form-control" for="lang">Language</label>
+    <select class="form-control" id="lang" name="lang" formControlName="lang" required="required">
+      <option *ngFor="let lg of languages" [value]="lg.id">
+        {{lg.name}}
+      </option>
+    </select>
+  </div>
+  <div class="form-group">
+    <label class="form-control" for="sourceCode">Source code</label>
+    <textarea class="form-control" id="sourceCode" name="sourceCode" cols="200" rows="10" formControlName="sourceCode" required="required"></textarea>
+    <div class="alert alert-danger"
+         *ngIf="formGroup.controls['sourceCode'].invalid && formGroup.controls['sourceCode'].touched">
+      Source code required
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="form-control">Input and output files </label>
+    <div formArrayName="files">
+      <table class="table">
+        <thead>
+        <tr>
+          <th>#</th>
+          <th>inputs</th>
+          <th>outputs</th>
+          <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="form-group" *ngFor="let io of files.controls; let i = index" formGroupName="{{i}}">
+          <td>{{i + 1}}</td>
+          <td><input type="file" name="{{'input' + i}}" formControlName="input" (change)="onFileChanged($event, i, inputFlag)"></td>
+          <td><input type="file" name="{{'output' + i}}" formControlName="output" (change)="onFileChanged($event, i, outputFlag)"></td>
+          <td>
+            <button *ngIf="i == 0" type="button" class="btn btn-outline-primary btn-block" (click)="addIO()">Add</button>
+            <button *ngIf="i > 0" type="button" class="btn btn-outline-danger btn-block" (click)="removeIO(i)">Remove</button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="alert alert-danger"
+         *ngIf="files.invalid && files.touched">
+      Input and output files required
+    </div>
+  </div>
+  <div class="form-group d-flex justify-content-end">
+    <input type="submit" [disabled]="formGroup.invalid" class="btn btn-success" value="Submit" />
+  </div>
+</form>
