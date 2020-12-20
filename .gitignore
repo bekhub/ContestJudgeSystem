@@ -232,4 +232,7 @@ _Pvt_Extensions
 
 .idea
 /Test/Test.csproj
-/ContestJudgeSystem/Files/
+/ContestJudgeSystem/wwwroot/Files/Inputs/
+/ContestJudgeSystem/wwwroot/Files/Outputs/
+/ContestJudgeSystem/wwwroot/Files/RealOutputs/
+/ContestJudgeSystem/wwwroot/Files/Sources/
