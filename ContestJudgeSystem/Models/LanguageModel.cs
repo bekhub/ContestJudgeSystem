@@ -1,4 +1,14 @@
 ﻿namespace ContestJudgeSystem.Models
 {
-    public record LanguageModel(int Id, string Name);
+    public class LanguageModel
+    {
+        public class List
+        {
+            public int Id { get; set; }
+
+            public string Name { get; set; }
+            
+            public string Mode { get; set; }
+        }
+    }
 }

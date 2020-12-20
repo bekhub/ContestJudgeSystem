@@ -1,1 +1,19 @@
-﻿
+﻿<h2>Submissions</h2>
+<table class="table">
+  <thead>
+    <tr>
+      <th>№</th>
+      <th>language</th>
+      <th>result</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let sub of submissions;">
+      <td><a class="nav-link" [routerLink]="['/submission', sub.id]">{{sub.id}}</a></td>
+      <td>{{sub.language}}</td>
+      <td *ngIf="sub.result === 'Accepted'"><a class="nav-link text-success" [routerLink]="['/submission', sub.id]">{{sub.result}}</a></td>
+      <td *ngIf="sub.result !== 'Accepted'"><a class="nav-link text-danger" [routerLink]="['/submission', sub.id]">{{sub.result}}</a></td>
+    </tr>
+  </tbody>
+</table>
+<ngx-spinner></ngx-spinner>
