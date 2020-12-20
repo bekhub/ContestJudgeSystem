@@ -6,10 +6,22 @@
         {{lg.name}}
       </option>
     </select>
+    <div class="alert alert-danger"
+         *ngIf="formGroup.controls['lang'].invalid && formGroup.controls['lang'].touched">
+      Language required
+    </div>
   </div>
   <div class="form-group">
     <label class="form-control" for="sourceCode">Source code</label>
-    <textarea class="form-control" id="sourceCode" name="sourceCode" cols="200" rows="10" formControlName="sourceCode" required="required"></textarea>
+    <ngx-codemirror
+      id="sourceCode"
+      formControlName="sourceCode"
+      [options]="{
+        lineNumbers: true,
+        theme: 'idea',
+        mode: 'text/x-c++src'
+      }"
+    ></ngx-codemirror>
     <div class="alert alert-danger"
          *ngIf="formGroup.controls['sourceCode'].invalid && formGroup.controls['sourceCode'].touched">
       Source code required
@@ -49,3 +61,4 @@
     <input type="submit" [disabled]="formGroup.invalid" class="btn btn-success" value="Submit" />
   </div>
 </form>
+<ngx-spinner></ngx-spinner>

@@ -2,14 +2,13 @@
 {
     public class LanguageModel
     {
-        public LanguageModel(int id, string name)
+        public class List
         {
-            Id = id;
-            Name = name;
-        }
-        
-        public int Id { get; set; }
+            public int Id { get; set; }
 
-        public string Name { get; set; }
+            public string Name { get; set; }
+            
+            public string Mode { get; set; }
+        }
     }
 }

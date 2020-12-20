@@ -1,7 +1,10 @@
 ﻿using ContestJudgeSystem.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using ContestJudgeSystem.Data;
 using ContestJudgeSystem.Services;
+using Models.Interfaces;
 
 namespace ContestJudgeSystem.Controllers
 {
@@ -11,22 +14,37 @@ namespace ContestJudgeSystem.Controllers
     {
         private MainService Service { get; }
         
-        public MainController(MainService service)
+        public MainController(IFileProvider fileProvider, DataContext context)
         {
-            Service = service;
+            Service = new MainService(fileProvider, context);
+        }
+        
+        [HttpGet]
+        [Route("submissions")]
+        public IEnumerable<SubmissionModel.List> GetSubmissions()
+        {
+            return Service.Submissions();
         }
 
         [HttpGet]
         [Route("languages")]
-        public IEnumerable<LanguageModel> Languages() => new LanguageModel[] {
-            new(0, "GNUC++17"), new(1, "Python 3"), new(2, "Java 14"), new(3, "C# 9"),
-        };
-
+        public IEnumerable<LanguageModel.List> Languages()
+        {
+            return Service.Languages();
+        }
+        
+        [HttpGet]
+        [Route("submission/{id}")]
+        public SubmissionModel.Get GetSubmission(int id)
+        {
+            return Service.Submission(id);
+        }
+        
         [HttpPost]
         [Route("submission")]
-        public void SendSubmission([FromBody] SubmissionModel model)
+        public async Task SendSubmission([FromBody] SubmissionModel.Add model)
         {
-            Service.ReceiveSubmission(model);
+            await Service.ReceiveSubmission(model);
         }
     }
 }

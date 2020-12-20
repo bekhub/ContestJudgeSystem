@@ -1,9 +1,10 @@
 ﻿import {Component} from '@angular/core';
-import {Validators, FormArray, FormBuilder} from '@angular/forms';
+import {FormArray, FormBuilder, Validators} from '@angular/forms';
 import {MainService} from "./main.service";
-import {Submission} from "../models/submission.model";
+import {CheckerEnum, Submission} from "../models/submission.model";
 import {Language} from "../models/language.model";
 import {Router} from "@angular/router";
+import {NgxSpinnerService} from "ngx-spinner";
 
 @Component({
   selector: 'app-main',
@@ -14,11 +15,12 @@ export class MainComponent {
 
   public formGroup = this.fb.group({
     sourceCode: [null, Validators.required],
-    lang: [0, Validators.required],
+    lang: [1, Validators.required],
     files: this.fb.array( [this.initIO()]),
   });
 
   public languages: Language[];
+  public selectedLang: Language;
 
   public readonly inputFlag = 0;
   public readonly outputFlag = 1;
@@ -26,11 +28,14 @@ export class MainComponent {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private service: MainService
+    private service: MainService,
+    private spinner: NgxSpinnerService
   ) { }
 
   ngOnInit() {
-    this.service.getLanguages().subscribe((languages: Language[]) => this.languages = languages);
+    this.spinner.show();
+    this.service.getLanguages().subscribe((languages: Language[]) => this.languages = languages)
+      .add(() => this.spinner.hide());
   }
 
   initIO() {
@@ -42,16 +47,18 @@ export class MainComponent {
     });
   }
 
-  onSubmit() {
+  async onSubmit() {
+    await this.spinner.show();
     let submission: Submission = {
       sourceCode: this.formGroup.value.sourceCode,
       languageId: this.formGroup.value.lang,
       files: this.formGroup.value.files.map(x => ({input: x.inputSource, output: x.outputSource})),
+      checker: "",
+      checkerType: CheckerEnum.Default,
     };
-    this.service.sendSubmission(submission).subscribe(
-      () => this.router.navigate(['/result']),
-      error => console.log(error)
-    );
+    this.service.sendSubmission(submission);
+    await this.spinner.hide();
+    await this.router.navigate(['/results']);
   }
 
   onFileChanged(event: any, index: number, flag: number) {

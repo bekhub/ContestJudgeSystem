@@ -1,0 +1,29 @@
+﻿<h2 *ngIf="submission.result !== 'Accepted'" class="alert-danger">{{ submission.result }}</h2>
+<h2 *ngIf="submission.result === 'Accepted'" class="alert-success">{{ submission.result }}</h2>
+
+<table *ngIf="submission.results.length != 0" class="table">
+  <thead>
+    <tr>
+      <th>Test №</th>
+      <th>Result</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="form-group" *ngFor="let res of submission.results; let i = index">
+      <td>{{i + 1}}</td>
+      <td *ngIf="res !== 'Accepted'" class="text-danger">{{res}}</td>
+      <td *ngIf="res === 'Accepted'" class="text-success">{{res}}</td>
+    </tr>
+  </tbody>
+</table>
+
+<ngx-codemirror
+  id="sourceCode"
+  [ngModel]="submission.sourceCode"
+  [options]="{
+        lineNumbers: true,
+        theme: 'idea',
+        mode: submission.mode,
+        readOnly: 'nocursor'
+      }"
+></ngx-codemirror>
