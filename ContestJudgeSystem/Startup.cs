@@ -27,10 +27,19 @@ namespace ContestJudgeSystem
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<DataContext>(options => 
-                options.UseLazyLoadingProxies()
-                    .UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
-            
+            if (Environment.IsDevelopment())
+            {
+                services.AddDbContext<DataContext>(options => 
+                    options.UseLazyLoadingProxies()
+                        .UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+            }
+            else
+            {
+                services.AddDbContext<DataContext>(options => 
+                    options.UseLazyLoadingProxies()
+                        .UseSqlServer(Configuration.GetConnectionString("SqlServerConnection")));
+            }
+
             services.AddControllersWithViews().AddMvcOptions(options =>
             {
                 options.ModelBinderProviders.Insert(0, new CustomModelBinderProvider());
